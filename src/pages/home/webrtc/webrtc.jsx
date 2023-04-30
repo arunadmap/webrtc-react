@@ -149,8 +149,13 @@ function CallScreen({ isConnected, onJoinMeetingClick, onEndMeetingClick }) {
   return (
     <>
       {isConnected ? (
-        <Card actions={[<EndMeeting onEndMeetingClick={onEndMeetingClick}></EndMeeting>]}>
-        <video autoPlay muted playsInline ref={localVideoRef} width={400} />
+        <Card 
+        actions={[<EndMeeting onEndMeetingClick={onEndMeetingClick}></EndMeeting>]}
+        bodyStyle={{margin:0, padding:0}}
+        >
+
+        
+        <video autoPlay muted playsInline ref={localVideoRef} width={'100%'} style={{ borderRadius:10}}/>
         
         </Card>
       ) : (
