@@ -7,16 +7,32 @@ import { Card } from "antd";
 
 function CallScreen({ isConnected, onJoinMeetingClick, onEndMeetingClick }) {
   const params = useParams();
-  const localUsername = params.username;
-  const roomName = params.room;
+  const localUsername = "aruna";
+  const roomName = "appointment";
   const localVideoRef = useRef(null);
   const remoteVideoRef = useRef(null);
 
-  const socket = socketio("https://signaling-server-flask.herokuapp.com/", {
+  const socket = socketio("http://13.126.103.157:3000/", {
     autoConnect: false,
   });
 
   let pc; // For RTCPeerConnection Object
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const sendData = (data) => {
     socket.emit("data", {
@@ -140,7 +156,10 @@ function CallScreen({ isConnected, onJoinMeetingClick, onEndMeetingClick }) {
   });
 
   useEffect(() => {
-    startConnection();
+    if (isConnected) {
+      startConnection();
+      createPeerConnection()
+    }
     return function cleanup() {
       pc?.close();
     };
@@ -149,14 +168,20 @@ function CallScreen({ isConnected, onJoinMeetingClick, onEndMeetingClick }) {
   return (
     <>
       {isConnected ? (
-        <Card 
-        actions={[<EndMeeting onEndMeetingClick={onEndMeetingClick}></EndMeeting>]}
-        bodyStyle={{margin:0, padding:0}}
+        <Card
+          actions={[
+            <EndMeeting onEndMeetingClick={onEndMeetingClick}></EndMeeting>,
+          ]}
+          bodyStyle={{ margin: 0, padding: 0 }}
         >
-
-        
-        <video autoPlay muted playsInline ref={localVideoRef} width={'100%'} style={{ borderRadius:10}}/>
-        
+          <video
+            autoPlay
+            muted
+            playsInline
+            ref={localVideoRef}
+            width={"100%"}
+            style={{ borderRadius: 10 }}
+          />
         </Card>
       ) : (
         <JoinMeeting onJoinMeetingClick={onJoinMeetingClick}></JoinMeeting>
