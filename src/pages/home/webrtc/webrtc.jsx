@@ -53,6 +53,7 @@ function CallScreen({ isConnected, onJoinMeetingClick, onEndMeetingClick }) {
         localVideoRef.current.srcObject = stream;
         socket.connect();
         socket.emit("join", { username: localUsername, room: roomName });
+        createPeerConnection()
       })
       .catch((error) => {
         console.error("Stream not found: ", error);
@@ -101,7 +102,7 @@ function CallScreen({ isConnected, onJoinMeetingClick, onEndMeetingClick }) {
       pc.onicecandidate = onIceCandidate;
       pc.ontrack = onTrack;
       const localStream = localVideoRef.current.srcObject;
-      for (const track of localStream.getTracks()) {
+      for (const track of localVideoRef.current.srcObject.getTracks()) {
         pc.addTrack(track, localStream);
       }
       console.log("PeerConnection created");
@@ -158,7 +159,7 @@ function CallScreen({ isConnected, onJoinMeetingClick, onEndMeetingClick }) {
   useEffect(() => {
     if (isConnected) {
       startConnection();
-      createPeerConnection()
+      
     }
     return function cleanup() {
       pc?.close();
