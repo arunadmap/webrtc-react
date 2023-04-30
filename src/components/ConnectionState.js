@@ -1,5 +1,7 @@
 import React from 'react';
-
+import { Badge, Space } from 'antd';
 export function ConnectionState({ isConnected }) {
-  return <p>State: { '' + isConnected }</p>;
+  return (<Space>
+    <Badge status="success" />
+  </Space>);
 }

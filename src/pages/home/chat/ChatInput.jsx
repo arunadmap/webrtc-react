@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { socket } from '../socket';
 
-export function MyForm() {
+export  default function ChatInput() {
   const [value, setValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -9,9 +9,7 @@ export function MyForm() {
     event.preventDefault();
     setIsLoading(true);
 
-  
-
-    socket.timeout(5000).emit('create-something', value, () => {
+    socket.emit('create-something', value, () => {
       setIsLoading(false);
     });
   }
