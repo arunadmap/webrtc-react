@@ -11,7 +11,6 @@ const Home = ({ children, isConnected, onJoinMeetingClick,onEndMeetingClick, ...
       <Col span={12}>
         <Card
           bodyStyle={{
-            display: "flex",
             alignItems: "center",
             justifyContent: "center",
             height: 400,

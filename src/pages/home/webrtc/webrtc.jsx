@@ -1,9 +1,11 @@
 import { useParams } from "react-router-dom";
 import { useRef, useEffect } from "react";
 import socketio from "socket.io-client";
+import JoinMeeting from "./JoinMeeting";
+import EndMeeting from "./EndMeeting";
+import { Card } from "antd";
 
-
-function CallScreen() {
+function CallScreen({ isConnected, onJoinMeetingClick, onEndMeetingClick }) {
   const params = useParams();
   const localUsername = params.username;
   const roomName = params.room;
@@ -142,16 +144,22 @@ function CallScreen() {
     return function cleanup() {
       pc?.close();
     };
-  }, []);
+  }, [isConnected]);
 
   return (
-    <div>
-      
-      <video autoPlay muted playsInline ref={localVideoRef} width={400}/>
+    <>
+      {isConnected ? (
+        <Card actions={[<EndMeeting onEndMeetingClick={onEndMeetingClick}></EndMeeting>]}>
+        <video autoPlay muted playsInline ref={localVideoRef} width={400} />
+        
+        </Card>
+      ) : (
+        <JoinMeeting onJoinMeetingClick={onJoinMeetingClick}></JoinMeeting>
+      )}
+
       <video autoPlay muted playsInline ref={remoteVideoRef} />
-    </div>
+    </>
   );
 }
 
 export default CallScreen;
-
