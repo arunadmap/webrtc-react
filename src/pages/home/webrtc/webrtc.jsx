@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 
-const socket = io('http://localhost:8000/');
+const socket = io('https://a29e-112-134-212-92.ngrok-free.app');
 
 const config = {
   iceServers: [
