@@ -20,6 +20,8 @@ const App = () => {
   const localVideoRef = useRef();
   const remoteVideoRef = useRef();
 
+
+
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({ video: true, audio: true })
       .then(stream => {
@@ -33,27 +35,34 @@ const App = () => {
     if (peerConnection) {
       peerConnection.onicecandidate = event => {
         if (event.candidate) {
-          console.log('Candidate', event.candidate);
+          console.log('on ice candidate event', event);
           socket.emit('iceCandidate', event.candidate);
         }
       };
 
       peerConnection.ontrack = event => {
+        console.log("ontrack event", event.streams[0]);
+        console.log("local Stream" , localStream);
         setRemoteStream(event.streams[0]);
         remoteVideoRef.current.srcObject = event.streams[0];
       };
 
       socket.on('iceCandidate', candidate => {
+        console.log("new iceCandidate");
         peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
       });
 
       socket.on('sdp', async sdp => {
+        
         if (sdp.type === 'offer') {
+          console.log('sdp offer', sdp);
           await peerConnection.setRemoteDescription(new RTCSessionDescription(sdp));
           const answer = await peerConnection.createAnswer();
           await peerConnection.setLocalDescription(answer);
+          console.log('sending sdp answer ', answer);
           socket.emit('sdp', answer);
         } else if (sdp.type === 'answer') {
+          console.log('sdp answer', sdp);
           await peerConnection.setRemoteDescription(new RTCSessionDescription(sdp));
         }
       });
@@ -69,18 +78,28 @@ const App = () => {
 
   const initiateCall = async () => {
     if (localStream) {
-      createPeerConnection();
-      const offer = await peerConnection.createOffer();
-      await peerConnection.setLocalDescription(offer);
+      console.log("hello");
+    const pc = new RTCPeerConnection(config);
+    localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+    
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+      setPeerConnection(pc);
       console.log("offer", offer);
       socket.emit('sdp', offer);
     }
   };
 
+
+  
+    
+
+
+
   return (
     <div>
-      <video ref={localVideoRef} autoPlay muted width={300}/>
-      <video ref={remoteVideoRef} autoPlay />
+      <video ref={localVideoRef} autoPlay muted width={300} />
+      <video ref={remoteVideoRef} autoPlay width={300}/>
       <button onClick={initiateCall}>Start Call</button>
     </div>
   );
