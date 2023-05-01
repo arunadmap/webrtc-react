@@ -1,3 +1,4 @@
+import { Button } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 
@@ -97,10 +98,12 @@ const App = () => {
 
 
   return (
-    <div>
-      <video ref={localVideoRef} autoPlay muted width={300} />
-      <video ref={remoteVideoRef} autoPlay width={300}/>
-      <button onClick={initiateCall}>Start Call</button>
+    <div style={{position:'relative'}}>
+      
+      <video ref={remoteVideoRef} autoPlay width={500} style={{position:'absolute'}}/>
+      <video ref={localVideoRef} autoPlay muted width={300} style={{position:'absolute'}}/>
+      
+      <Button onClick={initiateCall}>Start Call</Button>
     </div>
   );
 };
